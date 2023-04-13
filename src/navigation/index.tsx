@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import ProfileScreen from '../screens/ProfileScreen';
@@ -8,9 +8,29 @@ import {RootNavigatorParamList} from './type';
 
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
+const linking: LinkingOptions<RootNavigatorParamList> = {
+  prefixes: ['notjustphotos://', 'https://notjustphotos.com'],
+  config: {
+    initialRouteName: 'Home',
+    screens: {
+      Comments: 'comments', // notjustphotos://comments
+      Home: {
+        screens: {
+          HomeStack: {
+            initialRouteName: 'Feed',
+            screens: {
+              UserProfile: 'user/:userId', // notjustphotos://user/123
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 const Navigation = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{headerShown: true}}>
