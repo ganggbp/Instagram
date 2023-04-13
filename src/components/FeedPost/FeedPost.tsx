@@ -13,6 +13,8 @@ import styles from './styles';
 import {IPost} from '../../types/models';
 import React, {useCallback, useState} from 'react';
 import Carousel from '../Carousel';
+import {useNavigation} from '@react-navigation/native';
+import {FeedNavigationProp} from '../../navigation/type';
 
 interface IFeedPost {
   post: IPost;
@@ -25,6 +27,16 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
   const [lengthMore, setLengthMore] = useState(false);
 
   const [isLiked, setIsLiked] = useState(false);
+
+  const navigation = useNavigation<FeedNavigationProp>();
+
+  const navigateToUser = () => {
+    navigation.navigate('UserProfile', {userId: post.user.id});
+  };
+
+  const navigateToComment = () => {
+    navigation.navigate('Comments', {postId: post.id});
+  };
 
   const toggleDescriptionExpanded = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
@@ -71,7 +83,9 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
             }}
             style={styles.userAvatar}
           />
-          <Text style={styles.userName}>{post.user.username}</Text>
+          <Pressable onPress={navigateToUser}>
+            <Text style={styles.userName}>{post.user.username}</Text>
+          </Pressable>
           <Entypo
             name="dots-three-horizontal"
             size={16}
@@ -142,9 +156,11 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
           )}
 
           {/* Comments */}
-          <Text style={[styles.greyText, styles.verticalSpace]}>
-            View all {post.nofComments} comments
-          </Text>
+          <Pressable onPress={navigateToComment}>
+            <Text style={[styles.greyText, styles.verticalSpace]}>
+              View all {post.nofComments} comments
+            </Text>
+          </Pressable>
 
           {post.comments.map((comment, index) => {
             return <Comment comment={comment} key={comment.id} />;
