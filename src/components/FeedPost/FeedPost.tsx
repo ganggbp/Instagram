@@ -14,7 +14,7 @@ import {IPost} from '../../types/models';
 import React, {useCallback, useState} from 'react';
 import Carousel from '../Carousel';
 import {useNavigation} from '@react-navigation/native';
-import {FeedNavigationProp} from '../../navigation/type';
+import {FeedNavigationProp} from '../../types/navigation';
 
 interface IFeedPost {
   post: IPost;

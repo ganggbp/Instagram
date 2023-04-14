@@ -1,6 +1,4 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import PostUploadScreen from '../screens/PostUploadScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,7 +6,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import colors from '../theme/colors';
 import HomeStackNavigator from './HomeStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
-import {BottomTabNavigatorParamList} from './type';
+import {BottomTabNavigatorParamList} from '../types/navigation';
+import SearchTabNavigator from './SearchTabNavigator';
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
@@ -31,8 +30,9 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Search"
-        component={HomeScreen}
+        component={SearchTabNavigator}
         options={{
+          headerShown: false,
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="search" size={size} color={color} />
           ),
@@ -53,7 +53,7 @@ const BottomTabNavigator = () => {
         }}
       />
       <BottomTab.Screen
-        name="Notification"
+        name="Notifications"
         component={PostUploadScreen}
         options={{
           tabBarIcon: ({color, size}) => (

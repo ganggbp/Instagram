@@ -1,11 +1,12 @@
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Navigation from './src/navigation';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.app}>
+    <SafeAreaProvider style={styles.app}>
       <Navigation />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

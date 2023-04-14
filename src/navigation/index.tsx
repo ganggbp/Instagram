@@ -1,10 +1,9 @@
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import ProfileScreen from '../screens/ProfileScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import CommentsScreen from '../screens/CommentsScreen';
-import {RootNavigatorParamList} from './type';
+import {RootNavigatorParamList} from '../types/navigation';
 
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
