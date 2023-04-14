@@ -5,9 +5,12 @@ import styles from './styles';
 import Button from '../../components/Button/Button';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileNavigationProp} from '../../types/navigation';
+import {useAuthenticator} from '@aws-amplify/ui-react-native';
 
 const ProfileHeader = () => {
   const navigation = useNavigation<ProfileNavigationProp>();
+  const {signOut} = useAuthenticator();
+
   return (
     <View style={styles.root}>
       <View style={styles.headerRow}>
@@ -40,7 +43,7 @@ const ProfileHeader = () => {
           text="Edit Profile"
           onPress={() => navigation.navigate('Edit Profile')}
         />
-        <Button text="Go back" onPress={() => navigation.goBack()} />
+        <Button text="SignOut" onPress={signOut} />
       </View>
 
       {/* Grid View Post */}
