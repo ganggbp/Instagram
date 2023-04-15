@@ -14,37 +14,39 @@ type UserType = CognitoUser | null | undefined;
 
 type AuthContextType = {
   user: UserType;
-  setUser: Dispatch<SetStateAction<UserType>>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: undefined,
-  setUser: () => {},
 });
 
 const AuthContextProvider = ({children}: {children: ReactNode}) => {
   const [user, setUser] = useState<CognitoUser | null | undefined>();
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const authUser = await Auth.currentAuthenticatedUser({
-          bypassCache: true,
-        });
-        setUser(authUser);
-      } catch (e) {
-        setUser(null);
-      }
-    };
+  const checkUser = async () => {
+    try {
+      const authUser = await Auth.currentAuthenticatedUser({
+        bypassCache: true,
+      });
+      setUser(authUser);
+    } catch (e) {
+      setUser(null);
+    }
+  };
 
+  useEffect(() => {
     checkUser();
   }, []);
 
   useEffect(() => {
-    const listener: HubCallback = data => {
+    const listener = data => {
       const {event} = data.payload;
       if (event === 'signOut') {
         setUser(null);
+      }
+
+      if (event === 'signIn') {
+        checkUser();
       }
     };
 
@@ -53,11 +55,7 @@ const AuthContextProvider = ({children}: {children: ReactNode}) => {
     return () => hubListenerAuth();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{user, setUser}}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{user}}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContextProvider;

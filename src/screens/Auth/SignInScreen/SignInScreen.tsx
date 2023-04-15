@@ -15,10 +15,9 @@ import {useForm} from 'react-hook-form';
 import {SignInNavigationProp} from '../../../types/navigation';
 import {Auth} from 'aws-amplify';
 import {useState} from 'react';
-import {useAuthContext} from '../../../contexts/AuthContext';
 
 type SignInData = {
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -26,11 +25,10 @@ const SignInScreen = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation<SignInNavigationProp>();
   const [loading, setLoading] = useState(false);
-  const {setUser} = useAuthContext();
 
   const {control, handleSubmit, reset} = useForm<SignInData>();
 
-  const onSignInPressed = async ({username, password}: SignInData) => {
+  const onSignInPressed = async ({email, password}: SignInData) => {
     if (loading) {
       return;
     }
@@ -38,13 +36,10 @@ const SignInScreen = () => {
     setLoading(true);
 
     try {
-      const cognitoUser = await Auth.signIn(username, password);
-
-      setUser(cognitoUser);
-      // TODO save user data in context
+      await Auth.signIn(email, password);
     } catch (e) {
       if ((e as Error).name === 'UserNotConfirmedException') {
-        navigation.navigate('Confirm email', {username});
+        navigation.navigate('Confirm email', {email});
       } else {
         Alert.alert('Oops', (e as Error).message);
       }
@@ -72,10 +67,10 @@ const SignInScreen = () => {
         />
 
         <FormInput
-          name="username"
-          placeholder="Username"
+          name="email"
+          placeholder="Email"
           control={control}
-          rules={{required: 'Username is required'}}
+          rules={{required: 'Email is required'}}
         />
 
         <FormInput
