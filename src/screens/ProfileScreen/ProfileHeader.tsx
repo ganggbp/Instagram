@@ -5,11 +5,18 @@ import styles from './styles';
 import Button from '../../components/Button/Button';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileNavigationProp} from '../../types/navigation';
-import {useAuthenticator} from '@aws-amplify/ui-react-native';
+import {Auth} from 'aws-amplify';
 
 const ProfileHeader = () => {
   const navigation = useNavigation<ProfileNavigationProp>();
-  const {signOut} = useAuthenticator();
+
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  };
 
   return (
     <View style={styles.root}>
