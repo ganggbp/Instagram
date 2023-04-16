@@ -178,6 +178,11 @@
     uuid "^3.2.1"
     zen-observable-ts "0.8.19"
 
+"@aws-amplify/rtn-push-notification@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/rtn-push-notification/-/rtn-push-notification-1.1.0.tgz#96c7a295e59c7ad116d100886e97d1c651a606b4"
+  integrity sha512-Gx2isJm3sRBl3Cu93b5EfedzEfXHtRyZ8YVyP4Psp5T6ByGbjhsG2TfsuCEq/YsoimmBv9QFQzkRN+500/nsWw==
+
 "@aws-amplify/storage@5.2.1":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@aws-amplify/storage/-/storage-5.2.1.tgz#271d5d30a704198c3f52c9443ac76b000e054dc2"
