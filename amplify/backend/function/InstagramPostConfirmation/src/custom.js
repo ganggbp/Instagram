@@ -1,9 +1,80 @@
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
+
+const AWS = require('aws-sdk');
+const docClient = new AWS.DynamoDB.DocumentClient();
+
+const env = process.env.ENV;
+const AppsyncID = process.env.API_INSTAGRAM_GRAPHQLAPIIDOUTPUT;
+const TableName = `User-${AppsyncID}-${env}`; //TableName-AppsyncID-envName
+
+const userExist = async id => {
+  const params = {
+    TableName,
+    Key: id,
+  };
+
+  try {
+    const response = await docClient.get(params).promise();
+    return !!response?.Item; //convert to falsy value return true or false
+  } catch (e) {
+    return false;
+  }
+};
+
+const saveUser = async user => {
+  const date = new Date();
+  const dateStr = date.toISOString();
+  const timestamp = date.getTime();
+
+  const Item = {
+    ...user,
+    __typename: 'User',
+    createdAt: dateStr,
+    updatedAt: dateStr,
+    _lastChangedAt: timestamp,
+    _version: 1,
+  };
+
+  const params = {
+    TableName,
+    Item,
+  };
+
+  try {
+    await docClient.put(params).promise();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 exports.handler = async (event, context) => {
   console.log('Hey, Lambda function is working');
   console.log(event);
+
+  if (!event?.request?.userAttributes) {
+    console.log('No User data available');
+    return;
+  }
+
+  const {sub, name, email} = event.request.userAttributes; //{sub,email,name}
+
+  const newUser = {
+    id: sub,
+    name,
+    email,
+  };
+
+  //check if the user already exists
+
+  if (!(await userExist(newUser.id))) {
+    //if not, save the user to database
+    await saveUser(newUser);
+    console.log(`User ${newUser.id} has been saved to the database`);
+  } else {
+    console.log(`User ${newUser.id} already exists`);
+  }
 
   return event;
 };

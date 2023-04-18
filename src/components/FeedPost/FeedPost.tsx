@@ -10,14 +10,15 @@ import DoublePressable from '../DoublePressable';
 import VideoPlayer from '../VideoPlayer';
 
 import styles from './styles';
-import {IPost} from '../../types/models';
 import React, {useCallback, useState} from 'react';
 import Carousel from '../Carousel';
 import {useNavigation} from '@react-navigation/native';
 import {FeedNavigationProp} from '../../types/navigation';
+import {Post} from '../../API';
+import {DEFAULT_USER_IMAGE} from '../../config';
 
 interface IFeedPost {
-  post: IPost;
+  post: Post;
   isVisible: boolean;
 }
 
@@ -31,7 +32,9 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
   const navigation = useNavigation<FeedNavigationProp>();
 
   const navigateToUser = () => {
-    navigation.navigate('UserProfile', {userId: post.user.id});
+    if (post.User) {
+      navigation.navigate('UserProfile', {userId: post.User.id});
+    }
   };
 
   const navigateToComment = () => {
@@ -79,12 +82,12 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
         <View style={styles.header}>
           <Image
             source={{
-              uri: post.user.image,
+              uri: post.User?.image || DEFAULT_USER_IMAGE,
             }}
             style={styles.userAvatar}
           />
           <Pressable onPress={navigateToUser}>
-            <Text style={styles.userName}>{post.user.username}</Text>
+            <Text style={styles.userName}>{post.User?.username}</Text>
           </Pressable>
           <Entypo
             name="dots-three-horizontal"
@@ -143,7 +146,7 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
             style={styles.text}
             onTextLayout={onTextLayout}
             numberOfLines={isDescriptionExpanded ? 0 : 3}>
-            <Text style={styles.bold}>{post.user.username}</Text>{' '}
+            <Text style={styles.bold}>{post.User?.username}</Text>{' '}
             {post.description}
           </Text>
 
@@ -162,9 +165,10 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
             </Text>
           </Pressable>
 
-          {post.comments.map((comment, index) => {
-            return <Comment comment={comment} key={comment.id} />;
-          })}
+          {post.Comments?.items.map(
+            (comment, index) =>
+              comment && <Comment comment={comment} key={comment.id} />,
+          )}
 
           {/* Posted date */}
           <Text style={[styles.greyText, styles.verticalSpace]}>
