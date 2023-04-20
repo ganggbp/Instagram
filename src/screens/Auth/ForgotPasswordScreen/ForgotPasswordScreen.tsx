@@ -35,8 +35,7 @@ const ForgotPasswordScreen = () => {
     } finally {
       setLoading(false);
     }
-    // console.warn(data);
-    // navigation.navigate('New password');
+
   };
 
   const onSignInPress = () => {

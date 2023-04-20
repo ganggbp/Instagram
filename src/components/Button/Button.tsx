@@ -6,11 +6,14 @@ import fonts from '../../theme/fonts';
 interface IButton {
   text?: string;
   onPress?: () => void;
+  inline?: boolean;
 }
 
-const Button = ({text = '', onPress = () => {}}: IButton) => {
+const Button = ({text = '', onPress = () => {}, inline = false}: IButton) => {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
+    <Pressable
+      onPress={onPress}
+      style={[styles.container, inline ? {flex: 1} : {}]}>
       <Text style={styles.text}>{text}</Text>
     </Pressable>
   );
@@ -24,7 +27,6 @@ const styles = StyleSheet.create({
 
     padding: 5,
     alignItems: 'center',
-    flex: 1,
     margin: 5,
   },
   text: {

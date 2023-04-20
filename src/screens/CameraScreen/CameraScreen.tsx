@@ -11,6 +11,9 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import colors from '../../theme/colors';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {CameraNavigationProp} from '../../types/navigation';
 
 const flashMode = [
   FlashMode.off,
@@ -26,7 +29,10 @@ const flashModeToIcon = {
   [FlashMode.torch]: 'highlight',
 };
 
-const PostUploadScreen = () => {
+const CameraScreen = () => {
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation<CameraNavigationProp>();
+
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [cameraType, setCameraType] = useState(CameraType.back);
   const [flash, setFlash] = useState(FlashMode.off);
@@ -115,6 +121,15 @@ const PostUploadScreen = () => {
     }
   };
 
+  const navigateToCreateScreen = () => {
+    navigation.navigate('Create', {
+      images: [
+        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/4.jpg',
+        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/3.jpg',
+      ],
+    });
+  };
+
   if (hasPermission === null) {
     return <Text>Loading</Text>;
   }
@@ -133,7 +148,7 @@ const PostUploadScreen = () => {
         ratio="4:3"
         onCameraReady={() => setIsCameraReady(true)}
       />
-      <View style={[styles.buttonContainer, {top: 25}]}>
+      <View style={[styles.buttonContainer, {top: insets.top || 25}]}>
         <MaterialIcons name="close" size={30} color={colors.white} />
 
         <Pressable onPress={flipFlash}>
@@ -170,6 +185,14 @@ const PostUploadScreen = () => {
             color={colors.white}
           />
         </Pressable>
+
+        <Pressable onPress={navigateToCreateScreen}>
+          <MaterialIcons
+            name="arrow-forward-ios"
+            size={30}
+            color={colors.white}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -201,4 +224,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostUploadScreen;
+export default CameraScreen;

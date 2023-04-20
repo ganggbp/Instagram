@@ -5,6 +5,8 @@ import awsconfig from './src/aws-exports';
 import AuthContextProvider from './src/contexts/AuthContext';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {Linking} from 'react-native';
+import Client from './src/apollo/Client';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const urlOpener = async (url: string, redirectUrl: string) => {
   await InAppBrowser.isAvailable();
@@ -35,11 +37,15 @@ Amplify.configure(updateConfig);
 
 const App = () => {
   return (
-    <AuthContextProvider>
-      <SafeAreaProvider>
-        <Navigation />
-      </SafeAreaProvider>
-    </AuthContextProvider>
+    <SafeAreaProvider>
+      <MenuProvider>
+        <AuthContextProvider>
+          <Client>
+            <Navigation />
+          </Client>
+        </AuthContextProvider>
+      </MenuProvider>
+    </SafeAreaProvider>
   );
 };
 

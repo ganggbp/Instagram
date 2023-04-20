@@ -2,7 +2,6 @@ import {View, Text, Image, SafeAreaView, Pressable} from 'react-native';
 import colors from '../../theme/colors';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Comment from '../Comment';
@@ -16,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {FeedNavigationProp} from '../../types/navigation';
 import {Post} from '../../API';
 import {DEFAULT_USER_IMAGE} from '../../config';
+import PostMenu from './PostMenu';
 
 interface IFeedPost {
   post: Post;
@@ -89,11 +89,7 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
           <Pressable onPress={navigateToUser}>
             <Text style={styles.userName}>{post.User?.username}</Text>
           </Pressable>
-          <Entypo
-            name="dots-three-horizontal"
-            size={16}
-            style={styles.threeDots}
-          />
+          <PostMenu post={post} />
         </View>
 
         {/* Content */}

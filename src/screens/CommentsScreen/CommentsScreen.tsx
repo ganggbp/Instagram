@@ -9,7 +9,6 @@ import {
 import comments from '../../assets/data/comments.json';
 import React from 'react';
 import Comment from '../../components/Comment';
-import {IComment} from '../../types/models';
 import Input from './Input';
 
 const CommentsScreen = () => {
