@@ -17,19 +17,24 @@ import {Post} from '../../API';
 import {DEFAULT_USER_IMAGE} from '../../config';
 import PostMenu from './PostMenu';
 
+import useLikeService from '../../services/LikeService';
+import dayjs from 'dayjs';
+
 interface IFeedPost {
   post: Post;
   isVisible: boolean;
 }
 
-const FeedPost = ({post, isVisible}: IFeedPost) => {
+const FeedPost = ({post, isVisible = false}: IFeedPost) => {
+  const navigation = useNavigation<FeedNavigationProp>();
+
+  const {isLiked, toggleLike} = useLikeService(post);
+
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   // to determine should we have "more" && "less" text
   const [lengthMore, setLengthMore] = useState(false);
 
-  const [isLiked, setIsLiked] = useState(false);
-
-  const navigation = useNavigation<FeedNavigationProp>();
+  const postLikes = post.Likes?.items.filter(like => !like?._deleted) || [];
 
   const navigateToUser = () => {
     if (post.User) {
@@ -41,6 +46,10 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
     navigation.navigate('Comments', {postId: post.id});
   };
 
+  const navigateToLikes = () => {
+    navigation.navigate('PostLikes', {id: post.id});
+  };
+
   const toggleDescriptionExpanded = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
@@ -48,10 +57,6 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
   const onTextLayout = useCallback(e => {
     setLengthMore(e.nativeEvent.lines.length >= 3);
   }, []);
-
-  const toggleLike = () => {
-    setIsLiked(prev => !prev);
-  };
 
   let content = null;
   if (post.image) {
@@ -108,12 +113,15 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
                 />
               </Pressable>
 
-              <Ionicons
-                name="chatbubble-outline"
-                size={24}
-                style={styles.icon}
-                color={colors.black}
-              />
+              <Pressable onPress={navigateToComment}>
+                <Ionicons
+                  name="chatbubble-outline"
+                  size={24}
+                  style={styles.icon}
+                  color={colors.black}
+                />
+              </Pressable>
+
               <Feather
                 name="send"
                 size={24}
@@ -131,11 +139,20 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
           </View>
 
           {/* Likes */}
-          <Text style={styles.text}>
-            Liked by <Text style={styles.bold}>ligtods</Text> and{' '}
-            <Text style={styles.bold}>{post.nofLikes}</Text>
-            others
-          </Text>
+          {postLikes.length === 0 ? (
+            <Text>Be the first to like the post</Text>
+          ) : (
+            <Text style={styles.text} onPress={navigateToLikes}>
+              Liked by{' '}
+              <Text style={styles.bold}>{postLikes[0]?.User?.username}</Text>{' '}
+              {postLikes.length > 1 && (
+                <>
+                  and <Text style={styles.bold}>{post.nofLikes - 1}</Text>
+                  others
+                </>
+              )}
+            </Text>
+          )}
 
           {/* Post description */}
           <Text
@@ -155,20 +172,22 @@ const FeedPost = ({post, isVisible}: IFeedPost) => {
           )}
 
           {/* Comments */}
-          <Pressable onPress={navigateToComment}>
-            <Text style={[styles.greyText, styles.verticalSpace]}>
-              View all {post.nofComments} comments
-            </Text>
-          </Pressable>
+          {post.nofComments > 0 && (
+            <Pressable onPress={navigateToComment}>
+              <Text style={[styles.greyText, styles.verticalSpace]}>
+                View all {post.nofComments} comments
+              </Text>
+            </Pressable>
+          )}
 
-          {post.Comments?.items.map(
+          {(post.Comments?.items || []).map(
             (comment, index) =>
               comment && <Comment comment={comment} key={comment.id} />,
           )}
 
           {/* Posted date */}
           <Text style={[styles.greyText, styles.verticalSpace]}>
-            {post.createdAt}
+            {dayjs(post.createdAt).fromNow()}
           </Text>
         </View>
       </View>

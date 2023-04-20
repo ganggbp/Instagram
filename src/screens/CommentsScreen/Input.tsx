@@ -5,22 +5,36 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import colors from '../../theme/colors';
 import fonts from '../../theme/fonts';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import useCommentsService from '../../services/CommentsService';
 
-const Input = () => {
+interface IInput {
+  postId: string;
+}
+
+const Input = ({postId}: IInput) => {
   const [newComment, setNewComment] = useState('');
 
-  const onPost = () => {
-    console.warn(newComment);
-    //sending the data to backend
+  const insets = useSafeAreaInsets();
+  const {onCreateComment} = useCommentsService(postId);
+
+  const onPost = async () => {
+    try {
+      await onCreateComment(newComment);
+    } catch (e) {
+      Alert.alert('Error submitting the comment', (e as Error).message);
+    }
+
     setNewComment('');
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, {paddingBottom: insets.bottom}]}>
       <Image
         source={{
           uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/1.jpg',
@@ -32,7 +46,7 @@ const Input = () => {
         onChangeText={newText => setNewComment(newText)}
         placeholder="Add a comment..."
         style={styles.input}
-        multiline={true}
+        multiline
       />
       <Pressable onPress={onPost}>
         <Text style={styles.button}>POST</Text>

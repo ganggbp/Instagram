@@ -1,7 +1,12 @@
 type Like @model @auth(rules: [{allow: public}]) {
   id: ID!
   userID: ID! @index(name: "byUser")
-  postID: ID! @index(name: "byPost")
+  postID: ID!
+    @index(
+      name: "byPost"
+      queryField: "likesForPostByUser"
+      sortKeyFields: ["userID"]
+    )
 
   User: User @belongsTo(fields: ["userID"])
   Post: Post @belongsTo(fields: ["postID"])
@@ -9,9 +14,15 @@ type Like @model @auth(rules: [{allow: public}]) {
 
 type Comment @model @auth(rules: [{allow: public}]) {
   id: ID!
+  createdAt: AWSDateTime!
   comment: String!
   userID: ID! @index(name: "byUser")
-  postID: ID! @index(name: "byPost")
+  postID: ID!
+    @index(
+      name: "byPost"
+      queryField: "commentsByPost"
+      sortKeyFields: ["createdAt"]
+    )
 
   User: User @belongsTo(fields: ["userID"])
   Post: Post @belongsTo(fields: ["postID"])
@@ -19,6 +30,16 @@ type Comment @model @auth(rules: [{allow: public}]) {
 
 type Post @model @auth(rules: [{allow: public}]) {
   id: ID!
+
+  createdAt: AWSDateTime!
+  # dummy field to make partition key to use sorted
+  type: String!
+    @index(
+      name: "postsByDate"
+      queryField: "postsByDate"
+      sortKeyFields: ["createdAt"]
+    )
+
   description: String
   image: String
   images: [String!]
@@ -35,7 +56,8 @@ type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   email: String!
-  username: String @index(name: "usersByUsername", queryField: "usersByUsername")
+  username: String
+    @index(name: "usersByUsername", queryField: "usersByUsername")
   bio: String
   website: AWSURL
   image: String

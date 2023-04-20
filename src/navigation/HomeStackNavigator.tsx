@@ -5,6 +5,7 @@ import {Image} from 'react-native';
 import logo from '../assets/images/logo.png';
 import {HomeStackNavigatorParamList} from '../types/navigation';
 import UpdatePostScreen from '../screens/UpdatePostScreen';
+import PostLikeScreen from '../screens/PostLikeScreen/PostLikeScreen';
 
 const Stack = createNativeStackNavigator<HomeStackNavigatorParamList>();
 
@@ -25,6 +26,11 @@ const HomeStackNavigator = () => {
         name="UpdatePost"
         component={UpdatePostScreen}
         options={{title: 'Update Post'}}
+      />
+      <Stack.Screen
+        name="PostLikes"
+        component={PostLikeScreen}
+        options={{title: 'Post Likes'}}
       />
     </Stack.Navigator>
   );

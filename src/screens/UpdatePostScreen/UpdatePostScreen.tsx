@@ -23,6 +23,8 @@ const UpdatePostScreen = () => {
   const route = useRoute<UpdatePostRouteProp>();
   const {id} = route.params;
 
+  const {userId} = useAuthContext();
+
   const [description, setDescription] = useState('');
 
   const {data, loading, error} = useQuery<GetPostQuery, GetPostQueryVariables>(

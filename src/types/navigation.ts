@@ -10,6 +10,8 @@ export type RootNavigatorParamList = {
   EditProfile: undefined;
 };
 
+export type CommentsRouteProp = RouteProp<RootNavigatorParamList, 'Comments'>;
+
 export type BottomTabNavigatorParamList = {
   HomeStack: undefined;
   Search: undefined;
@@ -61,7 +63,18 @@ export type HomeStackNavigatorParamList = {
   Feed: undefined;
   UserProfile: {userId: string};
   UpdatePost: {id: string};
+  PostLikes: {id: string};
 };
+
+export type PostLikesNavigationProp = NativeStackNavigationProp<
+  HomeStackNavigatorParamList,
+  'PostLikes'
+>;
+
+export type PostLikesRouteProp = RouteProp<
+  HomeStackNavigatorParamList,
+  'PostLikes'
+>;
 
 export type UpdatePostRouteProp = RouteProp<
   HomeStackNavigatorParamList,

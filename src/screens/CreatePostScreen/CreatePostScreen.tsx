@@ -17,7 +17,7 @@ const CreatePostScreen = () => {
 
   const {image, video, images} = route.params;
 
-const {userId} = useAuthContext();
+  const {userId} = useAuthContext();
   const [description, setDescription] = useState('');
 
   const [doCreatePost, {data, error, loading}] = useMutation<
@@ -46,6 +46,7 @@ const {userId} = useAuthContext();
       const response = await doCreatePost({
         variables: {
           input: {
+            type: 'POST',
             description,
             image,
             images,
