@@ -9,6 +9,8 @@ import {
 import {AUTH_TYPE, AuthOptions, createAuthLink} from 'aws-appsync-auth-link';
 import {createSubscriptionHandshakeLink} from 'aws-appsync-subscription-link';
 import config from '../aws-exports';
+import {useAuthContext} from '../contexts/AuthContext';
+import {useMemo} from 'react';
 
 interface IClient {
   children: React.ReactNode;
@@ -17,17 +19,7 @@ interface IClient {
 const url = config.aws_appsync_graphqlEndpoint;
 const region = config.aws_appsync_region;
 
-const auth: AuthOptions = {
-  type: config.aws_appsync_authenticationType as AUTH_TYPE.API_KEY,
-  apiKey: config.aws_appsync_apiKey,
-};
-
 const httpLink = createHttpLink({uri: url});
-
-const link = ApolloLink.from([
-  createAuthLink({url, region, auth}),
-  createSubscriptionHandshakeLink({url, region, auth}, httpLink),
-]);
 
 const mergeLists = (existing = {items: []}, incoming = {items: []}) => {
   return {
@@ -52,12 +44,29 @@ const typePolicies: TypePolicies = {
   },
 };
 
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache({typePolicies}),
-});
-
 const Client = ({children}: IClient) => {
+  const {user} = useAuthContext();
+
+  const client = useMemo(() => {
+    const jwtToken =
+      user?.getSignInUserSession()?.getAccessToken().getJwtToken() || '';
+
+    const auth: AuthOptions = {
+      type: config.aws_appsync_authenticationType as AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
+      jwtToken,
+    };
+
+    const link = ApolloLink.from([
+      createAuthLink({url, region, auth}),
+      createSubscriptionHandshakeLink({url, region, auth}, httpLink),
+    ]);
+
+    return new ApolloClient({
+      link,
+      cache: new InMemoryCache({typePolicies}),
+    });
+  }, [user]);
+
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 

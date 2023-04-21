@@ -22,7 +22,7 @@ const HomeScreen = () => {
     PostsByDateQuery,
     PostsByDateQueryVariables
   >(postsByDate, {
-    variables: {type: 'POST', sortDirection: ModelSortDirection.DESC, limit: 1},
+    variables: {type: 'POST', sortDirection: ModelSortDirection.DESC, limit: 10},
   });
 
   const viewabilityConfig: ViewabilityConfig = {

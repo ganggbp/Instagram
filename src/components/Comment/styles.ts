@@ -34,4 +34,12 @@ export default StyleSheet.create({
   footerText: {
     color: colors.grey,
   },
+  new: {
+    backgroundColor: colors.primary,
+    color: colors.white,
+    paddingHorizontal: 5,
+    marginRight: 5,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
 });

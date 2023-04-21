@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 import colors from '../../theme/colors';
 import fonts from '../../theme/fonts';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import useCommentsService from '../../services/CommentsService';
+import useCommentsService from '../../services/CommentService/CommentsService';
 
 interface IInput {
   postId: string;

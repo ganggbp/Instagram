@@ -9,10 +9,11 @@ import dayjs from 'dayjs';
 
 interface ICommentProps {
   comment: CommentType;
-  includeDetails: boolean;
+  includeDetails?: boolean;
+  isNew?: boolean;
 }
 
-const Comment = ({comment, includeDetails = false}: ICommentProps) => {
+const Comment = ({comment, includeDetails = false, isNew}: ICommentProps) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const toggleLike = () => {
@@ -35,6 +36,7 @@ const Comment = ({comment, includeDetails = false}: ICommentProps) => {
         </Text>
         {includeDetails && (
           <View style={styles.footer}>
+            {isNew && <Text style={styles.new}>New</Text>}
             <Text style={styles.footerText}>
               {dayjs(comment.createdAt).fromNow()}
             </Text>
