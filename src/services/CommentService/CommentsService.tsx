@@ -29,7 +29,7 @@ const useCommentsService = (postId: string) => {
   const [doCreateComment] = useMutation<
     CreateCommentMutation,
     CreateCommentMutationVariables
-  >(createComment, {refetchQueries: ['CommentsByPost']});
+  >(createComment);
 
   const incrementNofComments = (amount: 1 | -1) => {
     if (!post) {

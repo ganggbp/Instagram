@@ -6,12 +6,7 @@ export default StyleSheet.create({
   comment: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  avatar: {
-    width: 40,
-    aspectRatio: 1,
-    borderRadius: 20,
-    marginRight: 10,
+    marginBottom: 15,
   },
   bold: {
     fontWeight: fonts.weight.bold,
@@ -28,7 +23,6 @@ export default StyleSheet.create({
   footer: {
     flexDirection: 'row',
     gap: 10,
-    marginBottom: 15,
     marginTop: 4,
   },
   footerText: {

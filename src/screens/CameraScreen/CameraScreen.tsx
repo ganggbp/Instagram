@@ -14,6 +14,7 @@ import colors from '../../theme/colors';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {CameraNavigationProp} from '../../types/navigation';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const flashMode = [
   FlashMode.off,
@@ -84,7 +85,9 @@ const CameraScreen = () => {
 
     try {
       const result = await camera.current.takePictureAsync(options);
-      console.log(result);
+      navigation.navigate('Create', {
+        image: result.uri,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -106,7 +109,9 @@ const CameraScreen = () => {
 
     try {
       const result = await camera.current.recordAsync(options);
-      console.log(result);
+      navigation.navigate('Create', {
+        video: result.uri,
+      });
     } catch (e) {
       console.log(e);
     }
@@ -121,13 +126,27 @@ const CameraScreen = () => {
     }
   };
 
-  const navigateToCreateScreen = () => {
-    navigation.navigate('Create', {
-      images: [
-        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/4.jpg',
-        'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/3.jpg',
-      ],
-    });
+  const openImageGallery = () => {
+    launchImageLibrary(
+      {mediaType: 'mixed', selectionLimit: 3},
+      ({didCancel, errorCode, assets}) => {
+        if (!didCancel && !errorCode && assets && assets.length > 0) {
+          const params: {image?: string; images?: string[]; video?: string} =
+            {};
+
+          if (assets.length === 1) {
+            const field = assets[0].type?.startsWith('video')
+              ? 'video'
+              : 'image';
+            params[field] = assets[0].uri;
+          } else if (assets.length > 1) {
+            params.images = assets.map(asset => asset.uri) as string[];
+          }
+
+          navigation.navigate('Create', params);
+        }
+      },
+    );
   };
 
   if (hasPermission === null) {
@@ -162,7 +181,9 @@ const CameraScreen = () => {
       </View>
 
       <View style={[styles.buttonContainer, {bottom: 25}]}>
-        <MaterialIcons name="photo-library" size={30} color={colors.white} />
+        <Pressable onPress={openImageGallery}>
+          <MaterialIcons name="photo-library" size={30} color={colors.white} />
+        </Pressable>
 
         {isCameraReady && (
           <Pressable
@@ -181,14 +202,6 @@ const CameraScreen = () => {
         <Pressable onPress={flipCamera}>
           <MaterialIcons
             name="flip-camera-ios"
-            size={30}
-            color={colors.white}
-          />
-        </Pressable>
-
-        <Pressable onPress={navigateToCreateScreen}>
-          <MaterialIcons
-            name="arrow-forward-ios"
             size={30}
             color={colors.white}
           />

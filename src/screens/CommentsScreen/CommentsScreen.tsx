@@ -103,10 +103,12 @@ const CommentsScreen = () => {
         contentContainerStyle={{padding: 10}}
         style={{flex: 1}}
         ListEmptyComponent={() => (
-          <Text>No comments. Be the first comment</Text>
+          <Text style={{transform: [{rotateX: '180deg'}]}}>
+            No comments. Be the first comment
+          </Text>
         )}
         inverted
-        onEndReached={() => loadMore()}
+        onEndReached={loadMore}
       />
 
       <Input postId={postId} />

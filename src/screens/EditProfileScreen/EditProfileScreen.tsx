@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Asset, launchImageLibrary} from 'react-native-image-picker';
+import {v4 as uuidv4} from 'uuid';
 
 import {useForm} from 'react-hook-form';
 import {
@@ -15,6 +16,7 @@ import {
   DeleteUserMutation,
   GetUserQuery,
   GetUserQueryVariables,
+  UpdateUserInput,
   UpdateUserMutation,
   UpdateUserMutationVariables,
   UsersByUsernameQuery,
@@ -25,7 +27,7 @@ import {deleteUser, getUser, updateUser, usersByUsername} from './queries';
 import {useAuthContext} from '../../contexts/AuthContext';
 import ApiErrorMessage from '../../components/ApiErrorMessage/ApiErrorMessage';
 import {useNavigation} from '@react-navigation/native';
-import {Auth} from 'aws-amplify';
+import {Auth, Storage} from 'aws-amplify';
 
 import styles from './styles';
 import CustomInput, {IEditableUser} from './CustomInput';
@@ -72,12 +74,44 @@ const EditProfileScreen = () => {
   }, [user, setValue]);
 
   const onSubmit = async (formData: IEditableUser) => {
+    const input: UpdateUserInput = {
+      id: userId,
+      ...formData,
+      _version: user?._version,
+    };
+
+    if (selectedPhoto?.uri) {
+      //upload photo
+      input.image = await uploadMedia(selectedPhoto.uri);
+    }
+
     await doUpdateUser({
-      variables: {input: {id: userId, ...formData, _version: user?._version}}, //current version of the user we want to update
+      variables: {input}, //current version of the user we want to update
     });
 
     if (navigation.canGoBack()) {
       navigation.goBack();
+    }
+  };
+
+  const uploadMedia = async (uri: string) => {
+    try {
+      //get the blob of the file from uri
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const uriParts = uri.split('.');
+      const extension = uriParts[uriParts.length - 1];
+
+      //generate a UUIDv4 value as the initial key
+      let key = `${uuidv4()}.${extension}`;
+
+      //check if the key already exists in the bucket... research later
+
+      //upload the file (blob) to S3
+      const s3Response = await Storage.put(key, blob);
+      return s3Response.key;
+    } catch (e) {
+      Alert.alert('Error uploading the file');
     }
   };
 

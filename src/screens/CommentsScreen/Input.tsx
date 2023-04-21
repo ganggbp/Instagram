@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,7 +8,6 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
 import colors from '../../theme/colors';
 import fonts from '../../theme/fonts';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -21,14 +21,11 @@ const Input = ({postId}: IInput) => {
   const [newComment, setNewComment] = useState('');
 
   const insets = useSafeAreaInsets();
+
   const {onCreateComment} = useCommentsService(postId);
 
   const onPost = async () => {
-    try {
-      await onCreateComment(newComment);
-    } catch (e) {
-      Alert.alert('Error submitting the comment', (e as Error).message);
-    }
+    onCreateComment(newComment);
 
     setNewComment('');
   };
@@ -43,11 +40,12 @@ const Input = ({postId}: IInput) => {
       />
       <TextInput
         value={newComment}
-        onChangeText={newText => setNewComment(newText)}
-        placeholder="Add a comment..."
+        onChangeText={setNewComment}
+        placeholder="Add a comment.."
         style={styles.input}
         multiline
       />
+
       <Pressable onPress={onPost}>
         <Text style={styles.button}>POST</Text>
       </Pressable>

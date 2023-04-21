@@ -4,8 +4,8 @@ import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import colors from '../../theme/colors';
 import {Comment as CommentType} from '../../API';
-import {DEFAULT_USER_IMAGE} from '../../config';
 import dayjs from 'dayjs';
+import UserImage from '../UserImage/UserImage';
 
 interface ICommentProps {
   comment: CommentType;
@@ -23,10 +23,7 @@ const Comment = ({comment, includeDetails = false, isNew}: ICommentProps) => {
   return (
     <View style={styles.comment}>
       {includeDetails && (
-        <Image
-          source={{uri: comment.User?.image || DEFAULT_USER_IMAGE}}
-          style={styles.avatar}
-        />
+        <UserImage imageKey={comment.User?.image || undefined} width={40} />
       )}
 
       <View style={styles.middleColumn}>

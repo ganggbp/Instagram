@@ -5,20 +5,18 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Comment from '../Comment';
-import DoublePressable from '../DoublePressable';
-import VideoPlayer from '../VideoPlayer';
 
 import styles from './styles';
-import React, {useCallback, useState} from 'react';
-import Carousel from '../Carousel';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {FeedNavigationProp} from '../../types/navigation';
 import {Post} from '../../API';
-import {DEFAULT_USER_IMAGE} from '../../config';
 import PostMenu from './PostMenu';
 
 import useLikeService from '../../services/LikeService';
 import dayjs from 'dayjs';
+import Content from './Content';
+import UserImage from '../UserImage/UserImage';
 
 interface IFeedPost {
   post: Post;
@@ -58,47 +56,20 @@ const FeedPost = ({post, isVisible = false}: IFeedPost) => {
     setLengthMore(e.nativeEvent.lines.length >= 3);
   }, []);
 
-  let content = null;
-  if (post.image) {
-    content = (
-      <DoublePressable onDoublePress={toggleLike}>
-        <Image
-          source={{
-            uri: post.image,
-          }}
-          style={styles.image}
-        />
-      </DoublePressable>
-    );
-  } else if (post.images) {
-    content = <Carousel images={post.images} onDoublePress={toggleLike} />;
-  } else if (post.video) {
-    content = (
-      <DoublePressable onDoublePress={toggleLike}>
-        <VideoPlayer uri={post.video} paused={!isVisible} />
-      </DoublePressable>
-    );
-  }
-
   return (
     <SafeAreaView>
       <View style={styles.post}>
         {/* Header */}
         <View style={styles.header}>
-          <Image
-            source={{
-              uri: post.User?.image || DEFAULT_USER_IMAGE,
-            }}
-            style={styles.userAvatar}
-          />
+          <UserImage imageKey={post?.User?.image || undefined} />
+
           <Pressable onPress={navigateToUser}>
             <Text style={styles.userName}>{post.User?.username}</Text>
           </Pressable>
           <PostMenu post={post} />
         </View>
 
-        {/* Content */}
-        {content}
+        <Content post={post} isVisible={isVisible} toggleLike={toggleLike} />
 
         {/* Footer */}
         <View style={styles.footer}>
