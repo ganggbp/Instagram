@@ -142,6 +142,8 @@ type EagerUser = {
   readonly Posts?: (Post | null)[] | null;
   readonly Comments?: (Comment | null)[] | null;
   readonly Likes?: (Like | null)[] | null;
+  readonly Followers?: (UserFollow | null)[] | null;
+  readonly Followings?: (UserFollow | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -164,6 +166,8 @@ type LazyUser = {
   readonly Posts: AsyncCollection<Post>;
   readonly Comments: AsyncCollection<Comment>;
   readonly Likes: AsyncCollection<Like>;
+  readonly Followers: AsyncCollection<UserFollow>;
+  readonly Followings: AsyncCollection<UserFollow>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -172,4 +176,38 @@ export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser :
 
 export declare const User: (new (init: ModelInit<User>) => User) & {
   copyOf(source: User, mutator: (draft: MutableModel<User>) => MutableModel<User> | void): User;
+}
+
+type EagerUserFollow = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<UserFollow, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly followerID: string;
+  readonly followeeID: string;
+  readonly Follower?: User | null;
+  readonly Followee?: User | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyUserFollow = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<UserFollow, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly followerID: string;
+  readonly followeeID: string;
+  readonly Follower: AsyncItem<User | undefined>;
+  readonly Followee: AsyncItem<User | undefined>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type UserFollow = LazyLoading extends LazyLoadingDisabled ? EagerUserFollow : LazyUserFollow
+
+export declare const UserFollow: (new (init: ModelInit<UserFollow>) => UserFollow) & {
+  copyOf(source: UserFollow, mutator: (draft: MutableModel<UserFollow>) => MutableModel<UserFollow> | void): UserFollow;
 }
