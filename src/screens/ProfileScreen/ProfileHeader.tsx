@@ -1,4 +1,4 @@
-import {View, Text, Image, Alert} from 'react-native';
+import {View, Text, Image, Alert, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import styles from './styles';
 import Button from '../../components/Button/Button';
@@ -46,9 +46,11 @@ const ProfileHeader = ({user}: IProfileHeader) => {
   const [doUnfollow, {loading: unfollowingLoading}] = useMutation<
     DeleteUserFollowMutation,
     DeleteUserFollowMutationVariables
-  >(deleteUserFollow, {refetchQueries: ['UserFollowings']});
+  >(deleteUserFollow);
 
-  navigation.setOptions({title: user?.username || 'Profile'});
+  useEffect(() => {
+    navigation.setOptions({title: user?.username || 'Profile'});
+  }, [user?.username]);
 
   useEffect(() => {
     if (user.image) {
@@ -84,9 +86,7 @@ const ProfileHeader = ({user}: IProfileHeader) => {
       }
     } else {
       try {
-        console.log('do follow');
-        const response = await doFollow();
-        console.log('follow response', response);
+        await doFollow();
       } catch (e) {
         Alert.alert('Failed to follow the user', (e as Error).message);
       }
@@ -105,15 +105,29 @@ const ProfileHeader = ({user}: IProfileHeader) => {
           <Text>Posts</Text>
         </View>
 
-        <View style={styles.numberContainer}>
+        <Pressable
+          style={styles.numberContainer}
+          onPress={() =>
+            navigation.navigate('UserFollow', {
+              id: user.id,
+              screen: 'Followers',
+            })
+          }>
           <Text style={styles.numberText}>{user.nofFollowers}</Text>
           <Text>Followers</Text>
-        </View>
+        </Pressable>
 
-        <View style={styles.numberContainer}>
+        <Pressable
+          style={styles.numberContainer}
+          onPress={() =>
+            navigation.navigate('UserFollow', {
+              id: user.id,
+              screen: 'Followings',
+            })
+          }>
           <Text style={styles.numberText}>{user.nofFollowings}</Text>
           <Text>Following</Text>
-        </View>
+        </Pressable>
       </View>
 
       <Text style={styles.name}>{user.name}</Text>

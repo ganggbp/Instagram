@@ -211,3 +211,39 @@ export declare type UserFollow = LazyLoading extends LazyLoadingDisabled ? Eager
 export declare const UserFollow: (new (init: ModelInit<UserFollow>) => UserFollow) & {
   copyOf(source: UserFollow, mutator: (draft: MutableModel<UserFollow>) => MutableModel<UserFollow> | void): UserFollow;
 }
+
+type EagerUserFeedPost = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<UserFeedPost, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly userID: string;
+  readonly postID: string;
+  readonly postCreatedAt: string;
+  readonly postOwnerID: string;
+  readonly Post?: Post | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyUserFeedPost = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<UserFeedPost, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly userID: string;
+  readonly postID: string;
+  readonly postCreatedAt: string;
+  readonly postOwnerID: string;
+  readonly Post: AsyncItem<Post | undefined>;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type UserFeedPost = LazyLoading extends LazyLoadingDisabled ? EagerUserFeedPost : LazyUserFeedPost
+
+export declare const UserFeedPost: (new (init: ModelInit<UserFeedPost>) => UserFeedPost) & {
+  copyOf(source: UserFeedPost, mutator: (draft: MutableModel<UserFeedPost>) => MutableModel<UserFeedPost> | void): UserFeedPost;
+}

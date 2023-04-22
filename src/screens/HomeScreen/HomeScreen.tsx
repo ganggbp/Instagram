@@ -7,22 +7,28 @@ import {
 import FeedPost from '../../components/FeedPost/FeedPost';
 import {useRef, useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {postsByDate} from './queries';
+import {userFeed} from './queries';
 import {
   ModelSortDirection,
-  PostsByDateQuery,
-  PostsByDateQueryVariables,
+  UserFeedQuery,
+  UserFeedQueryVariables,
 } from '../../API';
 import ApiErrorMessage from '../../components/ApiErrorMessage/ApiErrorMessage';
+import {useAuthContext} from '../../contexts/AuthContext';
 
 const HomeScreen = () => {
+  const {userId} = useAuthContext();
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const {data, loading, error, refetch, fetchMore} = useQuery<
-    PostsByDateQuery,
-    PostsByDateQueryVariables
-  >(postsByDate, {
-    variables: {type: 'POST', sortDirection: ModelSortDirection.DESC, limit: 10},
+    UserFeedQuery,
+    UserFeedQueryVariables
+  >(userFeed, {
+    variables: {
+      userID: userId,
+      sortDirection: ModelSortDirection.DESC,
+      limit: 10,
+    },
   });
 
   const viewabilityConfig: ViewabilityConfig = {
@@ -48,11 +54,11 @@ const HomeScreen = () => {
     );
   }
 
-  const posts = (data?.postsByDate?.items || []).filter(
-    post => !post?._deleted,
-  );
+  const posts = (data?.userFeed?.items || [])
+    .filter(item => !item?._deleted && !item?.Post?._deleted)
+    .map(item => item?.Post);
 
-  const nextToken = data?.postsByDate?.nextToken;
+  const nextToken = data?.userFeed?.nextToken;
 
   const loadMore = async () => {
     if (!nextToken || isFetchingMore) {
