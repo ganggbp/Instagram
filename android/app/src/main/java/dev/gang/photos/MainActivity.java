@@ -1,4 +1,4 @@
-package dev.notjust.photos;
+package dev.gang.photos;
 import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;
@@ -16,7 +16,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "notJust Photos";
+    return "gang Photos";
   }
 
   /**

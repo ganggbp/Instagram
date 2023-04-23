@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "dev.notjust.photos"
+    namespace "dev.gang.photos"
     defaultConfig {
-        applicationId "dev.notjust.photos"
+        applicationId "dev.gang.photos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

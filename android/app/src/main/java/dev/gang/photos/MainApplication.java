@@ -1,4 +1,4 @@
-package dev.notjust.photos;
+package dev.gang.photos;
 import android.content.res.Configuration;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
