@@ -101,7 +101,15 @@
           "deploymentBucketName": "amplify-instagram-prod-11906-deployment",
           "s3Key": "amplify-builds/InstagramPostConfirmation-3966743870783178317a-build.zip"
         },
-        "Instagram": {}
+        "Instagram": {},
+        "FeedGenerator": {
+          "deploymentBucketName": "amplify-instagram-prod-11906-deployment",
+          "s3Key": "amplify-builds/FeedGenerator-556a68374b432b595636-build.zip"
+        },
+        "UserFollowTrigger": {
+          "deploymentBucketName": "amplify-instagram-prod-11906-deployment",
+          "s3Key": "amplify-builds/UserFollowTrigger-4e656a73454d585a6d59-build.zip"
+        }
       },
       "api": {
         "Instagram": {}
