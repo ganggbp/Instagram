@@ -16,17 +16,17 @@ import PostScreen from '../screens/PostScreen/PostScreen';
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const linking: LinkingOptions<RootNavigatorParamList> = {
-  prefixes: ['notjustphotos://', 'https://notjustphotos.com'],
+  prefixes: ['gangphotos://', 'https://gangphotos.com'],
   config: {
     initialRouteName: 'Home',
     screens: {
-      Comments: 'comments', // notjustphotos://comments
+      Comments: 'comments', // gangphotos://comments
       Home: {
         screens: {
           HomeStack: {
             initialRouteName: 'Feed',
             screens: {
-              UserProfile: 'user/:userId', // notjustphotos://user/123
+              UserProfile: 'user/:userId', // gangphotos://user/123
             },
           },
         },
