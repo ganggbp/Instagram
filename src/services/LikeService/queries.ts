@@ -1,6 +1,5 @@
 import {gql} from '@apollo/client';
 
-
 export const createLike = gql`
   mutation CreateLike(
     $input: CreateLikeInput!
@@ -100,6 +99,27 @@ export const updatePost = gql`
       _version
       _deleted
       _lastChangedAt
+    }
+  }
+`;
+
+export const createNotification = gql`
+  mutation CreateNotification(
+    $input: CreateNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    createNotification(input: $input, condition: $condition) {
+      id
+      createdAt
+      readAt
+      type
+      userId
+      actorId
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      notificationPostId
     }
   }
 `;

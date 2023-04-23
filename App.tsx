@@ -9,6 +9,7 @@ import Client from './src/apollo/Client';
 import {MenuProvider} from 'react-native-popup-menu';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as dayjs from 'dayjs';
+import NotificationContextProvider from './src/contexts/NotificationContext';
 dayjs.extend(relativeTime);
 
 const urlOpener = async (url: string, redirectUrl: string) => {
@@ -30,8 +31,8 @@ const updateConfig = {
   ...awsconfig,
   oauth: {
     ...awsconfig.oauth,
-    redirectSignIn: 'notjustphotos://',
-    redirectSignOut: 'notjustphotos://',
+    redirectSignIn: 'gangphotos://',
+    redirectSignOut: 'gangphotos://',
     urlOpener,
   },
 };
@@ -44,7 +45,9 @@ const App = () => {
       <MenuProvider>
         <AuthContextProvider>
           <Client>
-            <Navigation />
+            <NotificationContextProvider>
+              <Navigation />
+            </NotificationContextProvider>
           </Client>
         </AuthContextProvider>
       </MenuProvider>

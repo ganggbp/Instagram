@@ -11,21 +11,22 @@ import {useQuery} from '@apollo/client';
 import {getUser} from './queries';
 import {GetUserQuery, GetUserQueryVariables} from '../API';
 import EditProfileScreen from '../screens/EditProfileScreen/EditProfileScreen';
+import PostScreen from '../screens/PostScreen/PostScreen';
 
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const linking: LinkingOptions<RootNavigatorParamList> = {
-  prefixes: ['notjustphotos://', 'https://notjustphotos.com'],
+  prefixes: ['gangphotos://', 'https://gangphotos.com'],
   config: {
     initialRouteName: 'Home',
     screens: {
-      Comments: 'comments', // notjustphotos://comments
+      Comments: 'comments', // gangphotos://comments
       Home: {
         screens: {
           HomeStack: {
             initialRouteName: 'Feed',
             screens: {
-              UserProfile: 'user/:userId', // notjustphotos://user/123
+              UserProfile: 'user/:userId', // gangphotos://user/123
             },
           },
         },
@@ -79,6 +80,7 @@ const Navigation = () => {
         />
 
         <Stack.Screen name="Comments" component={CommentsScreen} />
+        <Stack.Screen name="Post" component={PostScreen} />
       </>
     );
   }
