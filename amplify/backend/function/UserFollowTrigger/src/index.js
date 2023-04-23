@@ -9,12 +9,15 @@ Amplify Params - DO NOT EDIT */
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
+const {v4: uuidv4} = require('uuid');
+
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const env = process.env.ENV;
 const AppsyncID = process.env.API_INSTAGRAM_GRAPHQLAPIIDOUTPUT;
 const UserTableName = `User-${AppsyncID}-${env}`; //TableName-AppsyncID-envName
+const NotificationTableName = `Notification-${AppsyncID}-${env}`; //TableName-AppsyncID-envName
 
 exports.handler = async event => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
@@ -31,20 +34,21 @@ const handleEvent = async ({eventID, eventName, dynamodb}) => {
   console.log(eventName);
   console.log('DynamoDB Record: %j', dynamodb);
 
+  const followeeID = dynamodb.NewImage.followeeID.S;
+  const followerID = dynamodb.NewImage.followerID.S;
+
   if (eventName === 'INSERT') {
-    await increaseUserField(dynamodb.NewImage.followeeID.S, 'nofFollowers', 1);
-    await increaseUserField(dynamodb.NewImage.followerID.S, 'nofFollowings', 1);
+    //user A follow user B
+    await increaseUserField(followeeID, 'nofFollowers', 1);
+    await increaseUserField(followerID, 'nofFollowings', 1);
+    await createFollowNotification(followeeID, followerID);
   } else if (
     eventName === 'MODIFY' &&
     !dynamodb.OldImage._delete?.BOOL &&
     !!dynamodb.NewImage._deleted?.BOOL
   ) {
-    await increaseUserField(dynamodb.NewImage.followeeID.S, 'nofFollowers', -1);
-    await increaseUserField(
-      dynamodb.NewImage.followerID.S,
-      'nofFollowings',
-      -1,
-    );
+    await increaseUserField(followeeID, 'nofFollowers', -1);
+    await increaseUserField(followerID, 'nofFollowings', -1);
   }
 };
 
@@ -59,6 +63,40 @@ const increaseUserField = async (userId, field, value) => {
 
   try {
     await docClient.update(params).promise();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const createFollowNotification = async (userId, actorId) => {
+  const date = new Date();
+  const dateStr = date.toISOString();
+  const timestamp = date.getTime();
+
+  const Item = {
+    id: uuidv4(),
+    type: 'NEW_FOLLOWER',
+    actorId,
+    userId,
+    readAt: 0,
+
+    owner: `${actorId}::${actorId}`,
+    createdAt: dateStr,
+    updatedAt: dateStr,
+    _lastChangedAt: timestamp,
+    _version: 1,
+    __typename: 'Notification',
+  };
+
+  console.log('Item', Item);
+
+  const params = {
+    TableName: NotificationTableName,
+    Item,
+  };
+
+  try {
+    await docClient.put(params).promise();
   } catch (e) {
     console.log(e);
   }

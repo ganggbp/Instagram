@@ -420,7 +420,8 @@ export const schema = {
                             {
                                 "allow": "private",
                                 "operations": [
-                                    "read"
+                                    "read",
+                                    "update"
                                 ]
                             },
                             {
@@ -590,6 +591,29 @@ export const schema = {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
                             "Follower"
+                        ]
+                    }
+                },
+                "fcmToken": {
+                    "name": "fcmToken",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "Notifications": {
+                    "name": "Notifications",
+                    "isArray": true,
+                    "type": {
+                        "model": "Notification"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "User"
                         ]
                     }
                 },
@@ -910,10 +934,191 @@ export const schema = {
                     }
                 }
             ]
+        },
+        "Notification": {
+            "name": "Notification",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "readAt": {
+                    "name": "readAt",
+                    "isArray": false,
+                    "type": "AWSTimestamp",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "type": {
+                    "name": "type",
+                    "isArray": false,
+                    "type": {
+                        "enum": "NotificationTypes"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "userId": {
+                    "name": "userId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "User": {
+                    "name": "User",
+                    "isArray": false,
+                    "type": {
+                        "model": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "userId"
+                        ]
+                    }
+                },
+                "actorId": {
+                    "name": "actorId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "Actor": {
+                    "name": "Actor",
+                    "isArray": false,
+                    "type": {
+                        "model": "User"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "actorId"
+                        ]
+                    }
+                },
+                "Post": {
+                    "name": "Post",
+                    "isArray": false,
+                    "type": {
+                        "model": "Post"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "notificationPostId"
+                        ]
+                    }
+                },
+                "Comment": {
+                    "name": "Comment",
+                    "isArray": false,
+                    "type": {
+                        "model": "Comment"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "notificationCommentId"
+                        ]
+                    }
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "notificationPostId": {
+                    "name": "notificationPostId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "notificationCommentId": {
+                    "name": "notificationCommentId",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                }
+            },
+            "syncable": true,
+            "pluralName": "Notifications",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUser",
+                        "queryField": "userNotifications",
+                        "fields": [
+                            "userId",
+                            "createdAt"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "private",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
         }
     },
-    "enums": {},
+    "enums": {
+        "NotificationTypes": {
+            "name": "NotificationTypes",
+            "values": [
+                "NEW_FOLLOWER",
+                "NEW_LIKE",
+                "NEW_COMMENT"
+            ]
+        }
+    },
     "nonModels": {},
     "codegenVersion": "3.4.0",
-    "version": "e8a99ed7bb384cee5e38673103c8586e"
+    "version": "5f1a6f43b08e41374c60fd26e69d5308"
 };

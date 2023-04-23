@@ -9,10 +9,14 @@ import ProfileStackNavigator from './ProfileStackNavigator';
 import {BottomTabNavigatorParamList} from '../types/navigation';
 import SearchTabNavigator from './SearchTabNavigator';
 import UploadStackNavigator from './UploadStackNavigator';
+import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
+import {useNotificationContext} from '../contexts/NotificationContext/NotificationContext';
 
 const BottomTab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
 const BottomTabNavigator = () => {
+  const {newNotifications} = useNotificationContext();
+
   return (
     <BottomTab.Navigator
       screenOptions={{
@@ -55,7 +59,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Notifications"
-        component={CameraScreen}
+        component={NotificationsScreen}
         options={{
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
@@ -64,6 +68,7 @@ const BottomTabNavigator = () => {
               color={color}
             />
           ),
+          tabBarBadge: newNotifications || undefined,
         }}
       />
       <BottomTab.Screen

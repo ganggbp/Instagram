@@ -2,14 +2,22 @@ import {useMutation, useQuery} from '@apollo/client';
 import {
   CreateCommentMutation,
   CreateCommentMutationVariables,
+  CreateNotificationMutation,
+  CreateNotificationMutationVariables,
   GetPostQuery,
   GetPostQueryVariables,
   UpdatePostMutation,
   UpdatePostMutationVariables,
 } from '../../API';
-import {createComment, getPost, updatePost} from './queries';
+import {
+  createComment,
+  createNotification,
+  getPost,
+  updatePost,
+} from './queries';
 import {useAuthContext} from '../../contexts/AuthContext';
 import {Alert} from 'react-native';
+import {NotificationTypes} from '../../models';
 
 const useCommentsService = (postId: string) => {
   const {userId} = useAuthContext();
@@ -30,6 +38,11 @@ const useCommentsService = (postId: string) => {
     CreateCommentMutation,
     CreateCommentMutationVariables
   >(createComment);
+
+  const [doCreateNotification] = useMutation<
+    CreateNotificationMutation,
+    CreateNotificationMutationVariables
+  >(createNotification);
 
   const incrementNofComments = (amount: 1 | -1) => {
     if (!post) {
@@ -55,12 +68,25 @@ const useCommentsService = (postId: string) => {
     }
 
     try {
-      await doCreateComment({
+      const response = await doCreateComment({
         variables: {
           input: {
             postID: post.id,
             userID: userId,
             comment: newComment,
+          },
+        },
+      });
+
+      await doCreateNotification({
+        variables: {
+          input: {
+            type: NotificationTypes.NEW_COMMENT,
+            userId: post.userID,
+            actorId: userId,
+            notificationPostId: post.id,
+            notificationCommentId: response.data?.createComment?.id,
+            readAt: 0,
           },
         },
       });

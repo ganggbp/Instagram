@@ -2,6 +2,8 @@ import {useMutation, useQuery} from '@apollo/client';
 import {
   CreateLikeMutation,
   CreateLikeMutationVariables,
+  CreateNotificationMutation,
+  CreateNotificationMutationVariables,
   DeleteLikeMutation,
   DeleteLikeMutationVariables,
   LikesForPostByUserQuery,
@@ -15,8 +17,10 @@ import {
   updatePost,
   deleteLike,
   likesForPostByUser,
+  createNotification,
 } from './queries';
 import {useAuthContext} from '../../contexts/AuthContext';
+import {NotificationTypes} from '../../models';
 
 const useLikeService = (post: Post) => {
   const {userId} = useAuthContext();
@@ -44,6 +48,21 @@ const useLikeService = (post: Post) => {
     DeleteLikeMutationVariables
   >(deleteLike);
 
+  const [doCreateNotification] = useMutation<
+    CreateNotificationMutation,
+    CreateNotificationMutationVariables
+  >(createNotification, {
+    variables: {
+      input: {
+        type: NotificationTypes.NEW_LIKE,
+        userId: post.userID,
+        actorId: userId,
+        notificationPostId: post.id,
+        readAt: 0,
+      },
+    },
+  });
+
   const userLike = (usersLikeData?.likesForPostByUser?.items || []).filter(
     like => !like?._deleted,
   )?.[0];
@@ -60,8 +79,9 @@ const useLikeService = (post: Post) => {
     });
   };
 
-  const onAddLike = () => {
+  const onAddLike = async () => {
     doCreateLike();
+    await doCreateNotification();
     incrementNofLikes(1);
   };
 
