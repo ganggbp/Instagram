@@ -1,4 +1,9 @@
 {
   "name": "gang Photos",
-  "displayName": "gang Photos"
+  "displayName": "gang Photos",
+  "extra": {
+    "eas": {
+      "projectId": "772f663f-06a8-4900-ad20-0a1c7940eff0"
+    }
+  }
 }
