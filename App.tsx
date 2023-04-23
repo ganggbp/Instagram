@@ -31,8 +31,8 @@ const updateConfig = {
   ...awsconfig,
   oauth: {
     ...awsconfig.oauth,
-    redirectSignIn: 'notjustphotos://',
-    redirectSignOut: 'notjustphotos://',
+    redirectSignIn: 'gangphotos://',
+    redirectSignOut: 'gangphotos://',
     urlOpener,
   },
 };
