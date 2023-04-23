@@ -17,7 +17,7 @@ const SearchTabNavigator = () => {
         tabBarIndicatorStyle: {backgroundColor: colors.primary},
       }}>
       <Tab.Screen name="Users" component={UserSearchScreen} />
-      <Tab.Screen name="Posts" component={CommentsScreen} />
+      <Tab.Screen name="Posts" component={UserSearchScreen} />
     </Tab.Navigator>
   );
 };

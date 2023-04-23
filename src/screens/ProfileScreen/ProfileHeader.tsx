@@ -1,14 +1,23 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Alert, Pressable} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import styles from './styles';
 import Button from '../../components/Button/Button';
 import {useNavigation} from '@react-navigation/native';
 import {ProfileNavigationProp} from '../../types/navigation';
 import {Auth, Storage} from 'aws-amplify';
-import {User} from '../../API';
-import {DEFAULT_USER_IMAGE} from '../../config';
+import {
+  CreateUserFollowMutation,
+  CreateUserFollowMutationVariables,
+  DeleteUserFollowMutation,
+  DeleteUserFollowMutationVariables,
+  User,
+  UserFollowingsQuery,
+  UserFollowingsQueryVariables,
+} from '../../API';
 import {useAuthContext} from '../../contexts/AuthContext';
 import UserImage from '../../components/UserImage/UserImage';
+import {createUserFollow, deleteUserFollow, userFollowings} from './queries';
+import {useMutation, useQuery} from '@apollo/client';
 
 interface IProfileHeader {
   user: User;
@@ -19,7 +28,29 @@ const ProfileHeader = ({user}: IProfileHeader) => {
   const {userId} = useAuthContext();
   const navigation = useNavigation<ProfileNavigationProp>();
 
-  navigation.setOptions({title: user?.username || 'Profile'});
+  const {data: userFollowingsData, loading: userFollowingsLoading} = useQuery<
+    UserFollowingsQuery,
+    UserFollowingsQueryVariables
+  >(userFollowings, {
+    variables: {followerID: userId, followeeID: {eq: user.id}},
+  });
+
+  const [doFollow, {loading: followingLoading}] = useMutation<
+    CreateUserFollowMutation,
+    CreateUserFollowMutationVariables
+  >(createUserFollow, {
+    variables: {input: {followeeID: user.id, followerID: userId}},
+    refetchQueries: ['UserFollowings'],
+  });
+
+  const [doUnfollow, {loading: unfollowingLoading}] = useMutation<
+    DeleteUserFollowMutation,
+    DeleteUserFollowMutationVariables
+  >(deleteUserFollow);
+
+  useEffect(() => {
+    navigation.setOptions({title: user?.username || 'Profile'});
+  }, [user?.username]);
 
   useEffect(() => {
     if (user.image) {
@@ -27,11 +58,38 @@ const ProfileHeader = ({user}: IProfileHeader) => {
     }
   }, [user]);
 
+  const userFollowObject = userFollowingsData?.userFollowings?.items?.filter(
+    item => !item?._deleted,
+  )[0];
+
   const signOut = async () => {
     try {
       await Auth.signOut();
     } catch (error) {
       console.log('error signing out: ', error);
+    }
+  };
+
+  const onFollowPress = async () => {
+    if (!!userFollowObject) {
+      try {
+        await doUnfollow({
+          variables: {
+            input: {
+              id: userFollowObject.id,
+              _version: userFollowObject._version,
+            },
+          },
+        });
+      } catch (e) {
+        Alert.alert('Failed to unfollow the user', (e as Error).message);
+      }
+    } else {
+      try {
+        await doFollow();
+      } catch (e) {
+        Alert.alert('Failed to follow the user', (e as Error).message);
+      }
     }
   };
 
@@ -47,22 +105,36 @@ const ProfileHeader = ({user}: IProfileHeader) => {
           <Text>Posts</Text>
         </View>
 
-        <View style={styles.numberContainer}>
+        <Pressable
+          style={styles.numberContainer}
+          onPress={() =>
+            navigation.navigate('UserFollow', {
+              id: user.id,
+              screen: 'Followers',
+            })
+          }>
           <Text style={styles.numberText}>{user.nofFollowers}</Text>
           <Text>Followers</Text>
-        </View>
+        </Pressable>
 
-        <View style={styles.numberContainer}>
+        <Pressable
+          style={styles.numberContainer}
+          onPress={() =>
+            navigation.navigate('UserFollow', {
+              id: user.id,
+              screen: 'Followings',
+            })
+          }>
           <Text style={styles.numberText}>{user.nofFollowings}</Text>
           <Text>Following</Text>
-        </View>
+        </Pressable>
       </View>
 
       <Text style={styles.name}>{user.name}</Text>
       <Text>{user.bio}</Text>
 
       {/* Button */}
-      {userId === user.id && (
+      {userId === user.id ? (
         <View style={{flexDirection: 'row'}}>
           <Button
             text="Edit Profile"
@@ -71,9 +143,18 @@ const ProfileHeader = ({user}: IProfileHeader) => {
           />
           <Button text="SignOut" onPress={signOut} inline />
         </View>
+      ) : (
+        <View style={{flexDirection: 'row'}}>
+          <Button
+            text={!!userFollowObject ? 'UnFollow' : 'Follow'}
+            onPress={onFollowPress}
+            disabled={
+              userFollowingsLoading || followingLoading || unfollowingLoading
+            }
+            inline
+          />
+        </View>
       )}
-
-      {/* Grid View Post */}
     </View>
   );
 };
