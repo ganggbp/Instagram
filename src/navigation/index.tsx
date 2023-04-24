@@ -12,6 +12,7 @@ import {getUser} from './queries';
 import {GetUserQuery, GetUserQueryVariables} from '../API';
 import EditProfileScreen from '../screens/EditProfileScreen/EditProfileScreen';
 import PostScreen from '../screens/PostScreen/PostScreen';
+import PushNotifications from '../services/PushNotifications';
 
 const Stack = createNativeStackNavigator<RootNavigatorParamList>();
 
@@ -86,6 +87,7 @@ const Navigation = () => {
   }
   return (
     <NavigationContainer linking={linking}>
+      <PushNotifications />
       <Stack.Navigator screenOptions={{headerShown: true}}>
         {stackScreens}
       </Stack.Navigator>

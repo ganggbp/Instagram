@@ -4248,6 +4248,11 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-firebase/messaging@^17.4.2":
+  version "17.4.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-17.4.2.tgz#ebc589bd0e77783f4b4330d71287fd150f9dc120"
+  integrity sha512-WgqDFjx4JfCed459jrFtzYcejIoBbQKBKGM5lSjmH/cIGU+5Kp9g0x5QNrXdZL5dNo91bW+jJB/6JMjOLH56fw==
+
 "@react-native-picker/picker@2.4.8":
   version "2.4.8"
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.8.tgz#a1a21f3d6ecadedbc3f0b691a444ddd7baa081f8"
