@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>491737383714-5qenvfduflm6qof3ii0mk0m8d448h0tc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.491737383714-5qenvfduflm6qof3ii0mk0m8d448h0tc</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>491737383714-p31fcoofjsc296nvmkfmqri195nurk6r.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD3i3mcDPPMOcqKHKgP-d0RN7eKhhbka3w</string>
+	<key>GCM_SENDER_ID</key>
+	<string>491737383714</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.gang.photos</string>
+	<key>PROJECT_ID</key>
+	<string>gangphotos-665f4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gangphotos-665f4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:491737383714:ios:7619dd96e34cbdd8dddb7b</string>
+</dict>
+</plist>

@@ -1,0 +1,21 @@
+{
+    "appName": "instagram",
+    "roleName": "pinpointLambdaRole227d968d",
+    "cloudformationPolicyName": "cloudformationPolicy227d968d",
+    "cloudWatchPolicyName": "cloudWatchPolicy227d968d",
+    "pinpointPolicyName": "pinpointPolicy227d968d",
+    "authPolicyName": "pinpoint_amplify_227d968d",
+    "unauthPolicyName": "pinpoint_amplify_227d968d",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
