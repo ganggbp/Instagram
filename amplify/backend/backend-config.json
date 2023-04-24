@@ -124,6 +124,56 @@
       "service": "Lambda"
     }
   },
+  "parameters": {
+    "AMPLIFY_function_FeedGenerator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FeedGenerator"
+        }
+      ]
+    },
+    "AMPLIFY_function_FeedGenerator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FeedGenerator"
+        }
+      ]
+    },
+    "AMPLIFY_function_InstagramPostConfirmation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "InstagramPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_InstagramPostConfirmation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "InstagramPostConfirmation"
+        }
+      ]
+    },
+    "AMPLIFY_function_UserFollowTrigger_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "UserFollowTrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_UserFollowTrigger_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "UserFollowTrigger"
+        }
+      ]
+    }
+  },
   "storage": {
     "storage": {
       "dependsOn": [],
