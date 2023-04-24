@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postversion": "npx react-native-version"
+    "postversion": "react-native-version"
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
